@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>snake</title>
+    <style>
+        body{
+            background-color: black;
+            display: flex;
+            flex-direction: row;
+        }
+        #screen{
+            border: 5px solid white;
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            left: 0px;
+            margin: auto;
+            width: 500px;
+            height: 500px;
+        }
+        #score{
+            border: 5px solid white;
+            width: 200px;
+            height: 300px;
+            color: white;
+            background-color: white;
+        }
+    </style>
+    <script src ='/socket.io/socket.io.js'></script>
+</head>
+<body>
+    <canvas id='screen' width='600px' height='600px'>
+
+    <div id = "score">
+        <a>dasyhudhas</a>
+    </div>
+        
+    </canvas>
+    <script type="module">
+        import createGame from './game.js'
+        import createKeyBordListener from './keyboardlistener.js'
+        import renderGame from './render.js'
+
+        const game = createGame()
+
+        const socket = io()
+        
+        socket.on('connect', () => {
+            const playerId = socket.id
+            console.log('>>>Client connected on Server with id: ' + playerId)
+            
+            const screen = document.getElementById('screen')
+            renderGame(screen, game, requestAnimationFrame)
+        })
+
+        socket.on('setup', (state) => {
+            const playerId = socket.id
+            game.clientId = playerId
+            game.setState(state)
+            const keyboardlistener = createKeyBordListener(document, game)
+
+            keyboardlistener.subscribe((command) => {
+                socket.emit(command.type, command)
+            })
+        })
+
+        socket.on('add-player', (command) => {
+            if(command.id !== game.clientId) {
+                game.addPlayer(command)
+            }
+        })
+
+        socket.on('add-fruit', (command) => {
+            game.addFruit(command)
+        })
+
+        socket.on('move-player', (command) => {
+                game.movePlayer(command)
+        })
+
+        socket.on('remove-player', (command) => {
+            game.removePlayer(command.id)
+        })
+
+        socket.on('disconnect', () => {
+            keyboardlistener.deleteObservers()
+        })
+
+        socket.on('run', game.run)
+        </script>
+</body>
+</html>

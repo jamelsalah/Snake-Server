@@ -1,0 +1,27 @@
+{
+  "name": "snakeserver",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamelsalah/Snake-Server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jamelsalah/Snake-Server/issues"
+  },
+  "homepage": "https://github.com/jamelsalah/Snake-Server#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "http": "0.0.0",
+    "node": "^13.12.0",
+    "socket.io": "^2.3.0"
+  },
+  "description": ""
+}
